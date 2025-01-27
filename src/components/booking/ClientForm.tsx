@@ -34,8 +34,8 @@ export default function ClientForm({ service, dateTime, staff, onSubmit, onBack 
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setError(null); // Réinitialiser l'erreur
     setIsSubmitting(true);
-    setError(null);
     try {
       await onSubmit(formData);
     } catch (error) {
@@ -45,6 +45,7 @@ export default function ClientForm({ service, dateTime, staff, onSubmit, onBack 
       setIsSubmitting(false);
     }
   };
+  
 
   return (
     <div className="client-form">
