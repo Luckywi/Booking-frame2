@@ -50,20 +50,21 @@ export class SMSService {
 
       console.log('Headers:', headers);
 
-      const body = {
-        from: "ADM",
-        to: [formattedPhone],
-        text: `Bonjour ${firstName},\nRDV le ${dateStr} à ${timeStr}\nLuckyWi`,
-        channel: "SMS"
-      };
-
-      console.log('Body de la requête:', body);
-
       const response = await fetch('https://api.topmessage.com/v1/messages', {
-        method: 'POST',
-        headers,
-        body: JSON.stringify(body)
-      });
+  method: 'POST',
+  headers: {
+    'Content-Type': 'application/json',
+    'X-TopMessage-Key': process.env.NEXT_PUBLIC_TOPMESSAGE_API_KEY || '',
+  },
+  body: JSON.stringify({
+    data: {  // Ajout de l'objet data ici
+      from: "ADM",
+      to: [formattedPhone],
+      text: `Bonjour ${firstName},\nRDV le ${dateStr} à ${timeStr}\nLuckyWi`,
+      channel: "SMS"
+    }
+  })
+});
 
       if (!response.ok) {
         const errorData = await response.json();
