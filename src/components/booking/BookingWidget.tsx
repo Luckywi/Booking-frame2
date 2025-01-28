@@ -11,7 +11,6 @@ import ClientForm from './ClientForm';
 import { useRouter } from 'next/navigation';
 import { ChevronLeft } from 'lucide-react';
 import { useIframeResize } from '@/lib/hooks/useIframeResize';
-import { SMSService } from '@/lib/services/smsService';
 
 interface BookingWidgetProps {
   businessId: string;
@@ -278,16 +277,10 @@ export default function BookingWidget({ businessId }: BookingWidgetProps) {
                   };
               
                   const docRef = await addDoc(collection(db, 'appointments'), appointmentData);
-              
-                  // Envoi du SMS avant la redirection
-                  await SMSService.sendConfirmationSMS(docRef.id);
-                  
-                  // Redirection après l'envoi du SMS
                   router.push(`/confirmation/${docRef.id}`);
                   
                 } catch (error) {
                   console.error('Erreur lors de la création du rendez-vous:', error);
-                  throw error;
                 }
               }}
               onBack={() => handleStepChange(2)}
