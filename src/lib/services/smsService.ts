@@ -34,7 +34,7 @@ export class SMSService {
 
       const requestBody = {
         "data": {
-          "from": "ADM ",
+          "from": "VOTRE RDV",
           "to": [formattedPhone],
           "parameters": {
             [formattedPhone]: [firstName, businessName, appointmentDate, appointmentTime, confirmationUrl ]
