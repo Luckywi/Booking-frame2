@@ -25,3 +25,18 @@ export interface Service {
     datetime: Date;
     staffId: string | null;
   }
+
+  export interface Appointment {
+    id: string;
+    businessId: string;
+    staffId: string;
+    serviceId: string;
+    clientName: string;
+    clientEmail: string;
+    clientPhone: string;
+    start: Date;
+    end: Date;
+    status: 'confirmed' | 'cancelled';
+    createdAt: Date;
+    smsConfirmationSent?: boolean; // Nouveau champ
+  }

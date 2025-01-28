@@ -39,7 +39,7 @@ export class SMSService {
           "parameters": {
             [formattedPhone]: [firstName, businessName, appointmentDate, appointmentTime, confirmationUrl ]
           },
-          "text": "Bonjour {first_name} ! votre rendez-vous chez {businessName} est confirmé pour le {appointmentDate} à {appointmentTime}. Pour gérer votre réservation : {confirmationUrl}. À bientôt !",
+          "text": "Bonjour {first_name} ! Votre rendez-vous chez {businessName} est confirmé pour le {appointmentDate} à {appointmentTime}. Pour gérer votre réservation : {confirmationUrl} À bientôt !",
           "request_id": appointmentId,
           "shorten_URLs": true
         }
