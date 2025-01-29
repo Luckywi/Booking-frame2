@@ -210,16 +210,17 @@ export default function BookingWidget({ businessId }: BookingWidgetProps) {
 
         {step === 2 && (
           <div className="date-selector">
-            <div className="section-header">
-              <h2 className="section-title">Choisir la date et l'heure</h2>
-              <button 
-                onClick={() => handleStepChange(1)}
-                className="back-button"
-              >
-                <ChevronLeft className="w-4 h-4" />
-                Modifier le service
-              </button>
-            </div>
+          {/* En-tête avec résumé du service */}
+          <div className="section-header">
+            <h2 className="section-title">Choisir la date et l'heure</h2>
+            <button 
+              onClick={() => handleStepChange(1)}
+              className="back-button"
+            >
+              <ChevronLeft className="w-4 h-4" />
+              Modifier le service
+            </button>
+          </div>        
             <DateStaffSelection
               key={`date-staff-${selectedService?.id}`}
               businessId={businessId}

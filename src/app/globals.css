@@ -90,12 +90,12 @@
 
  /* En-têtes de section */
  .section-header {
-   @apply flex justify-between items-center;
- }
+  @apply flex flex-col lg:flex-row lg:justify-between lg:items-center gap-2 lg:gap-4;
+}
 
- .section-title {
-   @apply text-xl font-medium text-[hsl(var(--foreground))];
- }
+.section-title {
+  @apply text-xl font-medium text-[hsl(var(--foreground))] w-full;
+}
 
  .section-description {
    @apply text-sm text-[hsl(var(--muted-foreground))];
@@ -148,7 +148,7 @@
  }
 
  .calendar-navigation {
-   @apply flex justify-between p-2 border-b bg-[hsl(var(--muted))];
+   @apply flex justify-between p-2  bg-[hsl(var(--muted))];
  }
 
  .nav-button {
@@ -214,8 +214,8 @@
 
  /* Boutons de navigation */
  .back-button {
-   @apply text-sm text-[hsl(var(--foreground))] flex items-center gap-1;
- }
+  @apply text-sm text-[hsl(var(--foreground))] flex items-center gap-1 w-fit whitespace-nowrap;
+}
 
  /* États et utilitaires */
  .loading-state {
@@ -320,16 +320,68 @@
   .resa-container{
     @apply w-full max-w-3xl mx-auto bg-white rounded-xl shadow overflow-hidden;
   }
+
+  /* Classes pour la vue mobile du calendrier */
+.mobile-day-header {
+  @apply flex justify-between items-center p-4 text-[hsl(var(--foreground))] bg-[hsl(var(--background))] hover:bg-[hsl(var(--accent))] transition-colors;
+}
+
+.mobile-day-content {
+  @apply p-4 grid grid-cols-3 gap-2 bg-[hsl(var(--accent))]/10;
+}
+
+.mobile-time-slot {
+  @apply p-2 text-center border border-[hsl(var(--border))] rounded-md transition-colors text-sm;
+}
+
+.mobile-calendar-wrapper {
+  @apply space-y-2;
+}
+
+/* Classes responsives pour le calendrier */
+.desktop-calendar-view {
+  @apply hidden lg:block;
+}
+
+.mobile-calendar-view {
+  @apply block lg:hidden;
+}
+.view-more-button {
+  @apply w-full py-2 text-sm text-center text-[hsl(var(--muted-foreground))] hover:text-[hsl(var(--foreground))] transition-colors;
+}
+
+.staff-selector {
+  @apply border bg-[hsl(var(--accent))] p-4 rounded-md;
+}
+
+.staff-selector .summary-title {
+  @apply text-lg lg:text-base font-medium text-[hsl(var(--foreground))];
+}
+
+.staff-selector .summary-content {
+  @apply text-sm text-[hsl(var(--muted-foreground))];
+}
+
+/* Ajustements responsifs pour le conteneur principal */
+@media screen and (max-width: 768px) {
+  .calendar-container {
+    @apply border-none;
+  }
+  
+  .time-slots-grid {
+    @apply block;
+  }
+  
+  .time-slot-column {
+    @apply border-none min-h-0;
+  }
+
+  .staff-selector {
+    @apply p-3;
+  }
+}
   
 
-  @media screen and (max-width: 768px) {
-
-    .booking-container {
-    
-    }
-
-
-  }
 
 
 }

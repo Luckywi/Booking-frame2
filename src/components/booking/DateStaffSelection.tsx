@@ -8,6 +8,7 @@ import { collection, query, where, getDocs, doc, getDoc } from 'firebase/firesto
 import { format, addDays, startOfWeek } from 'date-fns';
 import { fr } from 'date-fns/locale';
 import type { Service } from '@/types/booking';
+import MobileCalendarView from './mobile/MobileCalendarView';
 
 interface Staff {
   id: string;
@@ -88,6 +89,7 @@ export default function DateStaffSelection({
   const [appointments, setAppointments] = useState<any[]>([]);
   const [businessHours, setBusinessHours] = useState<BusinessHours | null>(null);
   const [staffHoursMap, setStaffHoursMap] = useState<{ [key: string]: StaffHours }>({});
+  const [expandedDay, setExpandedDay] = useState<string | null>(null);
 
   const weekDays = [...Array(7)].map((_, index) => addDays(weekStart, index));
 
@@ -331,119 +333,137 @@ export default function DateStaffSelection({
     <div className="date-selector">
       {/* En-tête avec résumé du service */}
       <div className="staff-selector">
-        <div className="flex justify-between items-center">
-          <div>
-            <h3 className="summary-title">{selectedService?.title}</h3>
-            <p className="summary-content">
-              {formatDuration(serviceDuration)} - {selectedService?.price}€
-            </p>
-          </div>
-          <div>
-          <Select 
-  defaultValue="no_preference"
-  value={selectedStaff?.id || "no_preference"}
-  onValueChange={(value) => {
-    if (value === "no_preference") {
-      setSelectedStaff(null);
-    } else {
-      const selected = staff.find(s => s.id === value);
-      setSelectedStaff(selected || null);
-    }
-  }}
->
-  <SelectTrigger className="w-48 text-[hsl(var(--foreground))] bg-[hsl(var(--background))]">
-    <SelectValue placeholder="Avec qui ?" className="text-[hsl(var(--foreground))]">
-      {selectedStaff ? `${selectedStaff.firstName} ${selectedStaff.lastName}` : "Avec qui ?"}
-    </SelectValue>
-  </SelectTrigger>
-  <SelectContent className="bg-[hsl(var(--background))] border-[hsl(var(--border))]">
-    <SelectItem value="no_preference" className="text-[hsl(var(--foreground))]">
-      Sans préférence
-    </SelectItem>
-    {staff.map((member) => (
-      <SelectItem 
-        key={member.id} 
-        value={member.id} 
-        className="text-[hsl(var(--foreground))] hover:bg-[hsl(var(--accent))]"
+  <div className="flex flex-col lg:flex-row lg:justify-between lg:items-center gap-4">
+    <div className="space-y-1">
+      <h3 className="summary-title">{selectedService?.title}</h3>
+      <p className="summary-content">
+        {formatDuration(serviceDuration)} - {selectedService?.price}€
+      </p>
+    </div>
+    <div className="w-full lg:w-auto">
+      <Select 
+        defaultValue="no_preference"
+        value={selectedStaff?.id || "no_preference"}
+        onValueChange={(value) => {
+          if (value === "no_preference") {
+            setSelectedStaff(null);
+          } else {
+            const selected = staff.find(s => s.id === value);
+            setSelectedStaff(selected || null);
+          }
+        }}
       >
-        {member.firstName} {member.lastName}
-      </SelectItem>
-    ))}
-  </SelectContent>
-</Select>
-</div>
-</div>
+        <SelectTrigger className="w-full lg:w-48 text-[hsl(var(--foreground))] bg-[hsl(var(--background))]">
+          <SelectValue placeholder="Avec qui ?" className="text-[hsl(var(--foreground))]">
+            {selectedStaff ? `${selectedStaff.firstName} ${selectedStaff.lastName}` : "Avec qui ?"}
+          </SelectValue>
+        </SelectTrigger>
+        <SelectContent className="bg-[hsl(var(--background))] border-[hsl(var(--border))]">
+          <SelectItem value="no_preference" className="text-[hsl(var(--foreground))]">
+            Sans préférence
+          </SelectItem>
+          {staff.map((member) => (
+            <SelectItem 
+              key={member.id} 
+              value={member.id} 
+              className="text-[hsl(var(--foreground))] hover:bg-[hsl(var(--accent))]"
+            >
+              {member.firstName} {member.lastName}
+            </SelectItem>
+          ))}
+        </SelectContent>
+      </Select>
+    </div>
+  </div>
 </div>
 
-{/* Calendrier */}
-<div className="calendar-container">
-  <div className="calendar-header">
-    {weekDays.map((day) => (
-      <div key={day.toISOString()} className="calendar-day">
-        <div className="font-medium text-sm text-[hsl(var(--foreground))]">
-          {format(day, 'EEEE', { locale: fr })}
+      {/* Navigation commune */}
+      <div className="calendar-navigation mb-4">
+        <button
+          onClick={() => setWeekStart(addDays(weekStart, -7))}
+          className="nav-button text-[hsl(var(--foreground))]"
+        >
+          <ChevronLeft className="w-4 h-4" />
+        </button>
+        <div className="text-sm font-medium text-[hsl(var(--foreground))]">
+          {format(weekStart, 'd MMM', { locale: fr })} - {format(addDays(weekStart, 6), 'd MMM', { locale: fr })}
         </div>
-        <div className="font-medium text-sm text-[hsl(var(--foreground))]">
-          {format(day, 'd', { locale: fr })}
-          <span className="ml-1">
-            {format(day, 'MMM', { locale: fr })}
-          </span>
-        </div>
+        <button
+          onClick={() => setWeekStart(addDays(weekStart, 7))}
+          className="nav-button text-[hsl(var(--foreground))]"
+        >
+          <ChevronRight className="w-4 h-4" />
+        </button>
       </div>
-    ))}
-  </div>
 
-  {/* Navigation */}
-  <div className="calendar-navigation">
-  <button
-  onClick={() => setWeekStart(addDays(weekStart, -7))}
-  className="nav-button text-[hsl(var(--foreground))]"
->
-  <ChevronLeft className="w-4 h-4" />
-</button>
-<button
-  onClick={() => setWeekStart(addDays(weekStart, 7))}
-  className="nav-button text-[hsl(var(--foreground))]"
->
-  <ChevronRight className="w-4 h-4" />
-</button>
-  </div>
+      {/* Vue Mobile */}
+      <div className="block lg:hidden">
+        <MobileCalendarView
+          weekDays={weekDays}
+          availableSlots={availableSlots}
+          expandedDay={expandedDay}
+          setExpandedDay={setExpandedDay}
+          selectedStaff={selectedStaff}
+          selectedService={selectedService}
+          handleTimeSelect={handleTimeSelect}
+          loading={loading}
+        />
+      </div>
 
-        {/* Grille des horaires */}
-        <div className="time-slots-grid">
-          {weekDays.map((day) => {
-            const dayStr = format(day, 'yyyy-MM-dd');
-            const slots = availableSlots[dayStr] || [];
-
-            return (
-              <div key={dayStr} className="time-slot-column">
-                {slots.map((slot) => (
-                  <button
-                  key={slot.time}
-                  className={`
-                    w-full py-2 px-3 mb-2 text-sm rounded-md
-                    transition-all duration-200 font-medium
-                    ${selectedStaff 
-                      ? slot.availableStaff.some(s => s.id === selectedStaff.id)
-                        ? 'hover:bg-black hover:text-white bg-transparent text-[hsl(var(--foreground))] border border-[hsl(var(--foreground))]'
-                        : 'text-muted-foreground bg-muted cursor-not-allowed'
-                      : slot.availableStaff.length > 0
-                        ? 'hover:bg-black hover:text-white bg-transparent text-[hsl(var(--foreground))] border border-[hsl(var(--foreground))]'
-                        : 'text-muted-foreground bg-muted cursor-not-allowed'
-                    }
-                  `}
-                  disabled={selectedStaff 
-                    ? !slot.availableStaff.some(s => s.id === selectedStaff.id)
-                    : slot.availableStaff.length === 0
-                  }
-                  onClick={() => handleTimeSelect(day, slot)}
-                >
-                  {slot.time}
-                </button>
-                ))}
+      {/* Vue Desktop */}
+      <div className="hidden lg:block">
+        <div className="calendar-container">
+          <div className="calendar-header">
+            {weekDays.map((day) => (
+              <div key={day.toISOString()} className="calendar-day">
+                <div className="font-medium text-sm text-[hsl(var(--foreground))]">
+                  {format(day, 'EEEE', { locale: fr })}
+                </div>
+                <div className="font-medium text-sm text-[hsl(var(--foreground))]">
+                  {format(day, 'd', { locale: fr })}
+                  <span className="ml-1">
+                    {format(day, 'MMM', { locale: fr })}
+                  </span>
+                </div>
               </div>
-            );
-          })}
+            ))}
+          </div>
+
+          <div className="time-slots-grid">
+            {weekDays.map((day) => {
+              const dayStr = format(day, 'yyyy-MM-dd');
+              const slots = availableSlots[dayStr] || [];
+
+              return (
+                <div key={dayStr} className="time-slot-column">
+                  {slots.map((slot) => (
+                    <button
+                      key={slot.time}
+                      className={`
+                        w-full py-2 px-3 mb-2 text-sm rounded-md
+                        transition-all duration-200 font-medium
+                        ${selectedStaff 
+                          ? slot.availableStaff.some(s => s.id === selectedStaff.id)
+                            ? 'hover:bg-black hover:text-white bg-transparent text-[hsl(var(--foreground))] border border-[hsl(var(--foreground))]'
+                            : 'text-muted-foreground bg-muted cursor-not-allowed'
+                          : slot.availableStaff.length > 0
+                            ? 'hover:bg-black hover:text-white bg-transparent text-[hsl(var(--foreground))] border border-[hsl(var(--foreground))]'
+                            : 'text-muted-foreground bg-muted cursor-not-allowed'
+                        }
+                      `}
+                      disabled={selectedStaff 
+                        ? !slot.availableStaff.some(s => s.id === selectedStaff.id)
+                        : slot.availableStaff.length === 0
+                      }
+                      onClick={() => handleTimeSelect(day, slot)}
+                    >
+                      {slot.time}
+                    </button>
+                  ))}
+                </div>
+              );
+            })}
+          </div>
         </div>
       </div>
 
