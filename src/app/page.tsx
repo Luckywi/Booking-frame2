@@ -14,7 +14,7 @@ function HomeContent() {
   }
 
   return (
-    <main className="min-h-screen p-4 bg-[hsl(var(--background))]">
+    <main className="min-h-screen p-6 bg-[hsl(var(--background))]">
       <BookingWidget businessId={businessId} />
     </main>
   );
