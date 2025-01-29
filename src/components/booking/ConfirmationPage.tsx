@@ -1,5 +1,6 @@
 'use client';
 
+
 import { useEffect, useState } from 'react';
 import { doc, getDoc, collection, query, where, getDocs, updateDoc } from 'firebase/firestore';
 import { db } from '@/lib/firebase/config';
@@ -9,8 +10,10 @@ import { Card } from "@/components/ui/card";
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 import { useParams } from 'next/navigation';
-import { Calendar, Check, AlertCircle, ChevronUp, ChevronDown } from 'lucide-react';
+import { Calendar, Check, AlertCircle, ChevronUp, ChevronDown, Clock, User2, Mail, Phone, CreditCard } from 'lucide-react';
 import { useIframeResize } from '@/lib/hooks/useIframeResize';
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
+
 
 interface AppointmentService {
   title: string;
@@ -46,6 +49,20 @@ export default function ConfirmationPage() {
   const [cancelLoading, setCancelLoading] = useState(false);
   const [showAllAppointments, setShowAllAppointments] = useState(false);
   const calculateHeight = useIframeResize();
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  // @ts-expect-error type
+  const AppointmentDetail = ({ icon: Icon, label, value, highlight = false }) => (
+    <div className="confirmation-details-row">
+      <div className="icon-label-group">
+        <Icon className="w-4 h-4" />
+        <span>{label}</span>
+      </div>
+      <span className={`details-value ${highlight ? 'text-green-600' : ''}`}>
+        {value}
+      </span>
+    </div>
+  );
+  
 
   const handleToggleAppointments = () => {
     setShowAllAppointments(prev => !prev);
@@ -245,20 +262,20 @@ export default function ConfirmationPage() {
           {appointment.status === 'cancelled' ? (
             <>
               <div className="confirmation-icon-wrapper confirmation-icon-cancel">
-                <AlertCircle className="w-6 h-6 text-red-600" />
+                <AlertCircle className="w-8 h-8 text-red-600" />
               </div>
               <h1 className="confirmation-title">Rendez-vous annulé</h1>
               <p className="confirmation-subtitle">Ce rendez-vous a été annulé</p>
-              <Link href={`/?id=${businessId}`} className="mt-6 block">
-                <Button className="w-fit py-2 text-base text-white bg-black hover:bg-gray-800">
-                  Prendre un nouveau rendez-vous ?
+              <Link href={`/?id=${businessId}`} className="mt-8 inline-block">
+                <Button className="bg-black text-white hover:bg-gray-800 px-6">
+                  Prendre un nouveau rendez-vous
                 </Button>
               </Link>
             </>
           ) : (
             <>
               <div className="confirmation-icon-wrapper confirmation-icon-success">
-                <Check className="w-6 h-6 text-green-600" />
+                <Check className="w-8 h-8 text-green-600" />
               </div>
               <h1 className="confirmation-title">Réservation confirmée !</h1>
               <p className="confirmation-subtitle">
@@ -269,68 +286,114 @@ export default function ConfirmationPage() {
         </div>
 
         <div className="confirmation-details">
-          <h2 className="confirmation-details-title">Détails de votre rendez-vous :</h2>
-          <div className="confirmation-details-grid">
-            <div className="confirmation-details-row">
-              <span className="confirmation-details-label">Service :</span>
-              <span className="confirmation-details-value">{appointment.service.title}</span>
-            </div>
-            <div className="confirmation-details-row">
-              <span className="confirmation-details-label">Date :</span>
-              <span className="confirmation-details-value">
-                {format(appointment.start, 'EEEE d MMMM yyyy', { locale: fr })}
-              </span>
-            </div>
-            <div className="confirmation-details-row">
-              <span className="confirmation-details-label">Heure :</span>
-              <span className="confirmation-details-value">
-                {format(appointment.start, 'HH:mm')}
-              </span>
-            </div>
-            <div className="confirmation-details-row">
-              <span className="confirmation-details-label">Avec :</span>
-              <span className="confirmation-details-value">
-                {appointment.staff.firstName} {appointment.staff.lastName}
-              </span>
-            </div>
-            <div className="confirmation-details-row">
-              <span className="confirmation-details-label">Prix :</span>
-              <span className="confirmation-details-value">{appointment.service.price}€</span>
-            </div>
-            <div className="confirmation-details-row">
-              <span className="confirmation-details-label">Client :</span>
-              <span className="confirmation-details-value">{appointment.clientName}</span>
-            </div>
-            <div className="confirmation-details-row">
-              <span className="confirmation-details-label">Email :</span>
-              <span className="confirmation-details-value">{appointment.clientEmail}</span>
-            </div>
-            <div className="confirmation-details-row">
-              <span className="confirmation-details-label">Téléphone :</span>
-              <span className="confirmation-details-value">{appointment.clientPhone}</span>
-            </div>
-            <div className="confirmation-details-row">
-              <span className="confirmation-details-label">Statut :</span>
-              <span className={`confirmation-details-value ${
-                appointment.status === 'cancelled' ? 'text-red-600' : 'text-green-600'
-              }`}>
-                {appointment.status === 'cancelled' ? 'Annulé' : 'Confirmé'}
-              </span>
-            </div>
-          </div>
-        </div>
+  <h2 className="confirmation-details-title">Détails de votre rendez-vous</h2>
+  <AppointmentDetail 
+    icon={Calendar} 
+    label="Service" 
+    value={appointment.service.title} 
+  />
+  <AppointmentDetail 
+    icon={Calendar} 
+    label="Date" 
+    value={format(appointment.start, 'EEEE d MMMM yyyy', { locale: fr })} 
+  />
+  <AppointmentDetail 
+    icon={Clock} 
+    label="Heure" 
+    value={format(appointment.start, 'HH:mm')} 
+  />
+  <AppointmentDetail 
+    icon={User2} 
+    label="Avec" 
+    value={`${appointment.staff.firstName} ${appointment.staff.lastName}`} 
+  />
+  <AppointmentDetail 
+    icon={CreditCard} 
+    label="Prix" 
+    value={`${appointment.service.price}€`} 
+  />
+  <AppointmentDetail 
+    icon={User2} 
+    label="Client" 
+    value={appointment.clientName} 
+  />
+  <AppointmentDetail 
+    icon={Mail} 
+    label="Email" 
+    value={appointment.clientEmail} 
+  />
+  <AppointmentDetail 
+    icon={Phone} 
+    label="Téléphone" 
+    value={appointment.clientPhone} 
+  />
+  <AppointmentDetail 
+    icon={Check} 
+    label="Statut" 
+    value={appointment.status === 'cancelled' ? 'Annulé' : 'Confirmé'} 
+    highlight={appointment.status === 'confirmed'} 
+  />
+</div>
 
-        {isAppointmentCancellable && (
-          <Button
-            variant="destructive"
-            onClick={handleCancelAppointment}
+
+        
+{isAppointmentCancellable && (
+  <div className="confirmation-cancel-section">
+    <AlertDialog 
+  open={isDialogOpen} 
+  onOpenChange={(open) => {
+    setIsDialogOpen(open);
+    if (!open) setCancelLoading(false); // Réinitialiser l'état de chargement si on ferme
+  }}
+>
+      <AlertDialogTrigger asChild>
+        <Button 
+          variant="outline" 
+          className="cancel-button"
+          onClick={() => setIsDialogOpen(true)}
+        >
+          Annuler ce rendez-vous
+        </Button>
+      </AlertDialogTrigger>
+      <AlertDialogContent className="alert-dialog-content">
+        <AlertDialogHeader>
+          <AlertDialogTitle className="alert-dialog-title">
+            Annuler le rendez-vous ?
+          </AlertDialogTitle>
+          <AlertDialogDescription className="alert-dialog-description">
+            Cette action ne peut pas être annulée.
+            Êtes-vous sûr de vouloir annuler ce rendez-vous ?
+          </AlertDialogDescription>
+        </AlertDialogHeader>
+        <AlertDialogFooter className="alert-dialog-footer">
+        <AlertDialogCancel 
+  className="alert-dialog-cancel"
+  onClick={() => setIsDialogOpen(false)} // Ajout de cet événement
+>
+  Non, garder
+</AlertDialogCancel>
+          <AlertDialogAction
+            onClick={async () => {
+              await handleCancelAppointment();
+              setIsDialogOpen(false);
+            }}
             disabled={cancelLoading}
-            className="w-full"
+            className="alert-dialog-confirm"
           >
-            {cancelLoading ? 'Annulation...' : 'Annuler ce rendez-vous'}
-          </Button>
-        )}
-
+            {cancelLoading ? (
+              <div className="flex items-center gap-2">
+                <div className="w-4 h-4 border-2 border-white/50 border-t-white rounded-full animate-spin" />
+                <span>Annulation...</span>
+              </div>
+            ) : (
+              "Oui, annuler"
+            )}
+          </AlertDialogAction>
+        </AlertDialogFooter>
+      </AlertDialogContent>
+    </AlertDialog>
+  </div>
+)}
         {pastAppointments.length > 0 && (
           <div className="confirmation-history">
             <h2 className="confirmation-history-title">
@@ -360,7 +423,10 @@ export default function ConfirmationPage() {
               ))}
 
               {pastAppointments.length > 2 && (
-                <button onClick={handleToggleAppointments} className="w-full flex items-center justify-center gap-2 text-gray-500 hover:text-gray-700">
+                <button 
+                  onClick={handleToggleAppointments} 
+                  className="view-more-button"
+                >
                   <span>{showAllAppointments ? 'Voir moins' : 'Voir plus'}</span>
                   {showAllAppointments ? (
                     <ChevronUp className="w-4 h-4" />
@@ -373,13 +439,15 @@ export default function ConfirmationPage() {
           </div>
         )}
 
-        {appointment.status === 'confirmed' && (
-          <div className="text-center text-sm text-gray-500">
-            <p>Un email de confirmation a été envoyé à {appointment.clientEmail}</p>
+{appointment.status === 'confirmed' && (
+          <div className="px-8 py-6 text-center border-t border-[hsl(var(--border))]">
+            <p className="text-sm text-[hsl(var(--muted-foreground))]">
+              Un email de confirmation a été envoyé à {appointment.clientEmail}
+            </p>
           </div>
         )}
 
-        <div className="flex justify-center gap-4 mt-6">
+        <div className="confirmation-actions">
           {appointment.status === 'confirmed' && (
             <Link href={`/?id=${businessId}`}>
               <Button variant="outline">

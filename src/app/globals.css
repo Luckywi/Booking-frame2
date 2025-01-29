@@ -247,10 +247,9 @@
     @apply text-sm text-[hsl(var(--muted-foreground))];
   }
 
-
-   /* Styles de confirmation */
-   .confirmation-container {
-    @apply w-full max-w-3xl mx-auto;
+  /* Styles de confirmation */
+  .resa-container {
+    @apply w-full max-w-3xl mx-auto bg-white rounded-xl shadow overflow-hidden;
   }
 
   .confirmation-content {
@@ -258,7 +257,7 @@
   }
 
   .confirmation-header {
-    @apply text-center;
+    @apply text-center space-y-2;
   }
 
   .confirmation-icon-wrapper {
@@ -274,7 +273,7 @@
   }
 
   .confirmation-title {
-    @apply text-2xl font-bold text-gray-900;
+    @apply text-2xl font-bold;
   }
 
   .confirmation-subtitle {
@@ -282,29 +281,64 @@
   }
 
   .confirmation-details {
-    @apply bg-gray-50 rounded-lg p-4 space-y-3;
+    @apply bg-gray-50 rounded-lg p-4;
   }
 
   .confirmation-details-title {
-    @apply font-medium;
+    @apply font-medium mb-4;
   }
 
-  .confirmation-details-grid {
-    @apply space-y-2 text-sm;
-  }
-
+  /* Style pour mobile */
   .confirmation-details-row {
-    @apply flex justify-between items-start gap-4;
+    @apply flex items-start py-2 border-b border-gray-200 last:border-b-0;
   }
 
-  .confirmation-details-label {
-    @apply text-gray-500;
+  .icon-label-group {
+    @apply flex items-center gap-2 min-w-[120px] text-gray-500;
   }
 
-  .confirmation-details-value {
-    @apply font-medium;
+  .details-value {
+    @apply flex-1 text-right font-medium;
   }
 
+  .confirmation-cancel-section {
+    @apply px-6 py-6 border-t border-[hsl(var(--border))];
+  }
+
+  .cancel-button {
+    @apply w-full flex justify-center items-center py-3 px-4 rounded-lg bg-white hover:bg-red-50 text-red-600 border-2 border-red-600 transition-colors;
+  }
+
+
+  .alert-dialog-overlay {
+    @apply bg-black/50 fixed inset-0 z-50;
+  }
+
+  .alert-dialog-content {
+    @apply p-6 rounded-lg bg-white max-w-md w-full fixed top-[50%] left-[50%] -translate-x-[50%] -translate-y-[50%] z-50 shadow-lg;
+  }
+
+  .alert-dialog-title {
+    @apply text-lg font-semibold text-gray-900 mb-2;
+  }
+
+  .alert-dialog-description {
+    @apply text-sm text-gray-500 mb-6;
+  }
+
+  .alert-dialog-footer {
+    @apply flex gap-3 justify-end;
+  }
+
+  .alert-dialog-cancel {
+    @apply py-2 px-4 rounded-lg bg-gray-100 text-gray-700 hover:bg-gray-200 font-medium transition-colors;
+  }
+
+  .alert-dialog-confirm {
+    @apply py-2 px-4 rounded-lg bg-red-500 text-white hover:bg-red-600 font-medium transition-colors;
+  }
+
+  /* Historique */
   .confirmation-history {
     @apply mt-8 space-y-4;
   }
@@ -317,9 +351,33 @@
     @apply p-3 border rounded-lg flex justify-between items-center hover:bg-gray-50;
   }
 
-  .resa-container{
-    @apply w-full max-w-3xl mx-auto bg-white rounded-xl shadow overflow-hidden;
+  .status-badge {
+    @apply px-2 py-1 rounded-full text-xs font-medium;
   }
+
+  .print-section {
+    @apply flex justify-center gap-4 mt-6;
+  }
+
+
+/* Styles du bouton voir plus */
+.view-more-button {
+  @apply flex items-center justify-center gap-2 w-full py-3 text-sm text-[hsl(var(--muted-foreground))] hover:text-[hsl(var(--foreground))] transition-colors mt-4;
+}
+
+/* Styles des actions en bas */
+.confirmation-actions {
+  @apply flex justify-center gap-4 px-8 py-6 border-t border-[hsl(var(--border))];
+}
+
+/* État de chargement et erreur */
+.loading-state {
+  @apply flex items-center justify-center h-40 text-[hsl(var(--muted-foreground))];
+}
+
+.error-state {
+  @apply text-center py-12;
+}
 
   /* Classes pour la vue mobile du calendrier */
 .mobile-day-header {

@@ -474,10 +474,10 @@ export default function DateStaffSelection({
       )}
 
       {!loading && Object.values(availableSlots).every(slots => slots.length === 0) && (
-        <div className="empty-state">
-          Aucun créneau disponible dans les 8 prochaines semaines.
-          Veuillez nous contacter directement pour plus d'informations.
-        </div>
+       <div className="empty-state">
+       Aucun créneau disponible dans les 8 prochaines semaines.
+       Veuillez nous contacter directement pour plus d'informations.
+     </div>
       )}
     </div>
   );
