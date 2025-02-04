@@ -40,4 +40,5 @@ export interface Service {
     createdAt: Date;
     smsConfirmationSent?: boolean;
     emailConfirmationSent?: boolean; 
+    emailAdminConfirmationSent?:boolean;
   }

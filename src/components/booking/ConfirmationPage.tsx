@@ -37,7 +37,8 @@ interface Appointment {
   service: AppointmentService;
   staff: AppointmentStaff;
   smsConfirmationSent?: boolean;
-  emailConfirmationSent?: boolean;  // Nouveau champ
+  emailConfirmationSent?: boolean;
+  emailAdminConfirmationSent?:boolean;  // Nouveau champ
 }
 
 export default function ConfirmationPage() {
