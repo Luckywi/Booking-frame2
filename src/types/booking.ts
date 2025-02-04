@@ -38,5 +38,6 @@ export interface Service {
     end: Date;
     status: 'confirmed' | 'cancelled';
     createdAt: Date;
-    smsConfirmationSent?: boolean; // Nouveau champ
+    smsConfirmationSent?: boolean;
+    emailConfirmationSent?: boolean; 
   }

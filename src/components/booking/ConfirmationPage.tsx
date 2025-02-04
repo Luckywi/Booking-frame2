@@ -36,7 +36,8 @@ interface Appointment {
   status: 'confirmed' | 'cancelled';
   service: AppointmentService;
   staff: AppointmentStaff;
-  smsConfirmationSent?: boolean; // Nouveau champ
+  smsConfirmationSent?: boolean;
+  emailConfirmationSent?: boolean;  // Nouveau champ
 }
 
 export default function ConfirmationPage() {

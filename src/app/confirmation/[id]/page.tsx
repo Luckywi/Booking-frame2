@@ -4,6 +4,7 @@ import { useEffect } from 'react';
 import { useParams } from 'next/navigation';
 import ConfirmationPage from '@/components/booking/ConfirmationPage';
 import { SMSService } from '@/lib/services/smsService';
+import { EmailService } from '@/lib/services/emailService';
 import { doc, getDoc, updateDoc } from 'firebase/firestore';
 import { db } from '@/lib/firebase/config';
 
@@ -50,5 +51,45 @@ export default function Page() {
     sendSMS();
   }, [params.id]);
 
-  return <ConfirmationPage />;
+
+ // Email sending
+ useEffect(() => {
+  const sendEmail = async () => {
+    if (!params.id) return;
+
+    try {
+      const appointmentRef = doc(db, 'appointments', params.id as string);
+      const appointmentDoc = await getDoc(appointmentRef);
+
+      if (!appointmentDoc.exists()) {
+        console.error('Rendez-vous non trouvé');
+        return;
+      }
+
+      const appointmentData = appointmentDoc.data();
+
+        // 2. Vérifier si le MAIL a déjà été envoyé
+        if (appointmentData.emailConfirmationSent) {
+          console.log('MAIL déjà envoyé');
+          return;
+        }
+
+      await EmailService.sendConfirmationEmail(params.id as string);
+      console.log('Email de confirmation envoyé');
+
+       // 4. Mettre à jour le statut
+       await updateDoc(appointmentRef, {
+        emailConfirmationSent: true
+      });
+
+
+    } catch (error) {
+      console.error('Erreur lors de l\'envoi de l\'email:', error);
+    }
+  };
+
+  sendEmail();
+}, [params.id]);
+
+return <ConfirmationPage />;
 }
