@@ -12,6 +12,8 @@ import Link from 'next/link';
 import { useParams } from 'next/navigation';
 import { Calendar, Check, AlertCircle, ChevronUp, ChevronDown, Clock, User2, Mail, Phone, CreditCard } from 'lucide-react';
 import { useIframeResize } from '@/lib/hooks/useIframeResize';
+import {EmailCancellationService} from '@/lib/services/emailCancellationService';
+import {EmailAdminCancellationService} from '@/lib/services/emailAdminCancellationService';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
 
 
@@ -159,6 +161,8 @@ export default function ConfirmationPage() {
         status: 'cancelled'
       });
 
+      await EmailCancellationService.sendCancellationEmail(appointment.id);
+      await EmailAdminCancellationService.sendAdminCancellationEmail(appointment.id);
       setAppointment(prev => prev ? {...prev, status: 'cancelled'} : null);
       setTimeout(calculateHeight, 0);
     } catch (error) {

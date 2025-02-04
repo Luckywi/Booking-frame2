@@ -3,18 +3,15 @@ import { db } from '@/lib/firebase/config';
 import { format } from 'date-fns';
 import { fr } from 'date-fns/locale';
 
-export class EmailAdminService {
+export class EmailAdminCancellationService {
   private static readonly MAIL_COLLECTION = 'contact@fl-ec.fr';
 
-  public static async sendNewAppointmentEmail(appointmentId: string): Promise<void> {
+  public static async sendAdminCancellationEmail(appointmentId: string): Promise<void> {
     try {
-      // Récupérer les données du rendez-vous
       const appointmentDoc = await getDoc(doc(db, 'appointments', appointmentId));
       if (!appointmentDoc.exists()) throw new Error('Rendez-vous non trouvé');
       
       const appointmentData = appointmentDoc.data();
-      
-      // Récupérer l'email de l'admin à partir du businessId
       const businessDoc = await getDoc(doc(db, 'users', appointmentData.businessId));
       if (!businessDoc.exists()) throw new Error('Business non trouvé');
       
@@ -22,7 +19,6 @@ export class EmailAdminService {
       const adminEmail = businessData.email;
       const businessName = businessData.businessName || "l'entreprise";
 
-      // Récupérer les détails du service et du staff
       const [serviceDoc, staffDoc] = await Promise.all([
         getDoc(doc(db, 'services', appointmentData.serviceId)),
         getDoc(doc(db, 'staff', appointmentData.staffId))
@@ -31,13 +27,11 @@ export class EmailAdminService {
       const serviceData = serviceDoc.data();
       const staffData = staffDoc.data();
 
-      // Préparer les données de l'email
       const emailData = {
         to: [adminEmail],
         message: {
-          subject: `🔔 Nouveau rendez-vous - ${businessName}`,
-          html: `
-          <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+          subject: `❌ ${appointmentData.clientName} a annulé son rendez-vous - ${businessName}`,
+          html: `<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
           <html xmlns="http://www.w3.org/1999/xhtml">
           <head>
             <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
@@ -77,14 +71,15 @@ export class EmailAdminService {
                     <table role="presentation" class="container" border="0" cellspacing="0" cellpadding="0" width="600" style="background-color:#FFFFFF; margin:0 auto;">
                       <tr>
                         <td style="background-color:#FFFFFF; padding:10px; text-align:center;">
-                          <h1 style="margin:0; font-size:24px; line-height:1.5;">Nouveau rendez-vous ! 📅</h1>
+                          <h1 style="margin:0; font-size:24px; line-height:1.5;">Rendez-vous annulé ❌</h1>
+                          <p style="margin:20px 0; color:#000000;">${appointmentData.clientName} vient d'annuler son rendez-vous.</p>
                         </td>
                       </tr>
                       <tr>
                         <td class="content" style="background-color:#FFFFFF; padding:15px;">
                           <table role="presentation" border="0" cellspacing="0" cellpadding="0" width="100%" style="background-color:#f8f8f8; border-radius:8px; margin:20px 0;">
                             <tr>
-                              <td style="padding:15px;">
+                              <td style="padding:20px;">
                                 <table role="presentation" border="0" cellspacing="0" cellpadding="0" width="100%">
                                   <!-- Client -->
                                   <tr class="detail-row">
@@ -203,7 +198,7 @@ export class EmailAdminService {
                             <tr>
                               <td style="padding:20px 0; text-align:center;">
                                 <p style="margin:0; font-size:13px; color:#999999;">
-                                  Cet email est généré automatiquement. Pour modifier ou annuler ce rendez-vous, utilisez le bouton ci-dessus.
+                                  Cet email est généré automatiquement.
                                 </p>
                               </td>
                             </tr>
@@ -216,38 +211,34 @@ export class EmailAdminService {
               </table>
             </div>
           </body>
-          </html>
-          `,
+          </html>`,
           text: `
-          Nouveau rendez-vous ! 📅
-      
-          Vous avez un nouveau rendez-vous pour ${businessName} !
-      
-          Détails du rendez-vous :
-      
-          Client : ${appointmentData.clientName}
-          Service : ${serviceData?.title}
-          Date : ${format(appointmentData.start.toDate(), 'EEEE d MMMM yyyy', { locale: fr })}
-          Heure : ${format(appointmentData.start.toDate(), 'HH:mm')}
-          Avec : ${staffData?.firstName} ${staffData?.lastName}
-          Prix : ${serviceData?.price}€
-          
-          Contact client :
-          Email : ${appointmentData.clientEmail}
-          Téléphone : ${appointmentData.clientPhone}
-      
-          Gérer vos rendez-vous : https://booking-admin-bfmq.vercel.app/login
-      
-          Cet email est généré automatiquement.`
+    Annulation de rendez-vous
+
+    ${appointmentData.clientName} vient d'annuler son rendez-vous.
+
+    Détails du rendez-vous annulé :
+
+    Client : ${appointmentData.clientName}
+    Service : ${serviceData?.title}
+    Date : ${format(appointmentData.start.toDate(), 'EEEE d MMMM yyyy', { locale: fr })}
+    Heure : ${format(appointmentData.start.toDate(), 'HH:mm')}
+    Avec : ${staffData?.firstName} ${staffData?.lastName}
+    Prix : ${serviceData?.price}€
+    
+    Contact client :
+    Email : ${appointmentData.clientEmail}
+    Téléphone : ${appointmentData.clientPhone}
+
+    Gérer vos rendez-vous : https://booking-admin-bfmq.vercel.app/login`
         }
       };
 
-      // Envoyer l'email
       await addDoc(collection(db, this.MAIL_COLLECTION), emailData);
-      console.log('Email admin envoyé avec succès');
+      console.log('Email d\'annulation admin envoyé avec succès');
 
     } catch (error) {
-      console.error('Erreur lors de l\'envoi de l\'email admin:', error);
+      console.error('Erreur lors de l\'envoi de l\'email d\'annulation admin:', error);
       throw error;
     }
   }

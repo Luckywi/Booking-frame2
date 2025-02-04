@@ -49,12 +49,12 @@ export class EmailService {
             padding: 10px !important;
           }
           .content {
-            padding: 15px !important;
+            padding: 8px !important;
           }
           .button {
             width: 200px !important;
             margin: 0 auto !important;
-            font-size: 14px !important;
+            font-size: 12px !important;
             padding: 12px 20px !important;
           }
           .detail-row td {
@@ -74,14 +74,14 @@ export class EmailService {
             <td align="center" style="padding: 20px 0; background-color:#FFFFFF;">
               <table role="presentation" class="container" border="0" cellspacing="0" cellpadding="0" width="600" style="background-color:#FFFFFF; margin:0 auto;">
                 <tr>
-                  <td style="background-color:#FFFFFF; padding:20px; text-align:center;">
+                  <td style="background-color:#FFFFFF; padding:10px; text-align:center;">
                     <h1 style="margin:0; font-size:24px; line-height:1.5;">Réservation confirmée ✨</h1>
                     <p style="margin:0 0 20px; color:#000000;">Bonjour ${firstName},</p>
                     <p style="margin:0 0 20px; color:#000000; text-align:center;">Votre rendez-vous chez ${businessName} est confirmé !</p>
                   </td>
                 </tr>
                 <tr>
-                  <td class="content" style="background-color:#FFFFFF; padding:20px;">
+                  <td class="content" style="background-color:#FFFFFF; padding:15px;">
                     <table role="presentation" border="0" cellspacing="0" cellpadding="0" width="100%" style="background-color:#f8f8f8; border-radius:8px; margin:20px 0;">
                       <tr>
                         <td style="padding:20px;">
