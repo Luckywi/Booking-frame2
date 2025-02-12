@@ -7,7 +7,7 @@ import { db } from '@/lib/firebase/config';
 import { collection, query, where, getDocs, doc, getDoc } from 'firebase/firestore';
 import { format, addDays, startOfWeek } from 'date-fns';
 import { fr } from 'date-fns/locale';
-import type { Service } from '@/types/booking';
+import type { Service, BreakPeriod } from '@/types/booking';
 import MobileCalendarView from './mobile/MobileCalendarView';
 
 interface Staff {
@@ -36,6 +36,7 @@ interface BusinessHours {
       isOpen: boolean;
       openTime: string;
       closeTime: string;
+      breakPeriods?: BreakPeriod[];
     };
   };
 }
@@ -46,6 +47,7 @@ interface StaffHours {
       isOpen: boolean;
       openTime: string;
       closeTime: string;
+      breakPeriods?: BreakPeriod[];
     };
   };
 }
@@ -175,31 +177,59 @@ export default function DateStaffSelection({
     date: Date
   ): Staff[] => {
     const dateStr = format(date, 'yyyy-MM-dd');
+    const timeString = format(currentTime, 'HH:mm');
+    const endTimeString = format(slotEndTime, 'HH:mm');
     
     return staffToCheck.filter(staffMember => {
       const days = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
       const dayName = days[date.getDay()];
-
+  
+      // Vérification des horaires business
+      const businessDay = businessHours?.hours[dayName];
+      if (businessDay?.breakPeriods?.length) {
+        const isInBusinessBreak = businessDay.breakPeriods.some(period => {
+          return (
+            (timeString >= period.start && timeString < period.end) ||
+            (endTimeString > period.start && endTimeString <= period.end) ||
+            (timeString <= period.start && endTimeString >= period.end)
+          );
+        });
+        if (isInBusinessBreak) return false;
+      }
+  
+      // Vérification des horaires staff
       const staffHours = staffHoursMap[staffMember.id]?.hours?.[dayName];
       if (!staffHours?.isOpen) return false;
-
+  
+      // Vérification des pauses du staff
+      if (staffHours.breakPeriods?.length) {
+        const isInStaffBreak = staffHours.breakPeriods.some(period => {
+          return (
+            (timeString >= period.start && timeString < period.end) ||
+            (endTimeString > period.start && endTimeString <= period.end) ||
+            (timeString <= period.start && endTimeString >= period.end)
+          );
+        });
+        if (isInStaffBreak) return false;
+      }
+  
       const [openHour, openMinute] = staffHours.openTime.split(':').map(Number);
       const [closeHour, closeMinute] = staffHours.closeTime.split(':').map(Number);
       const staffStartTime = new Date(date);
       staffStartTime.setHours(openHour, openMinute, 0, 0);
       const staffEndTime = new Date(date);
       staffEndTime.setHours(closeHour, closeMinute, 0, 0);
-
+  
       if (currentTime < staffStartTime || slotEndTime > staffEndTime) {
         return false;
       }
-
+  
       const staffAppointments = appointments.filter(apt => 
         apt.staffId === staffMember.id &&
         apt.status !== 'cancelled' &&
         format(apt.start.toDate(), 'yyyy-MM-dd') === dateStr
       );
-
+  
       return !staffAppointments.some(apt => {
         const appointmentStart = apt.start.toDate();
         const appointmentEnd = apt.end.toDate();

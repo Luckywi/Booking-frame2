@@ -42,3 +42,10 @@ export interface Service {
     emailConfirmationSent?: boolean; 
     emailAdminConfirmationSent?:boolean;
   }
+
+  export interface BreakPeriod {
+    start: string;    // Format "HH:mm"
+    end: string;      // Format "HH:mm"
+    label?: string;   // Ex: "Pause déjeuner"
+  }
+  
