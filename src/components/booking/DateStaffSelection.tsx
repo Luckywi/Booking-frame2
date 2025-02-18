@@ -5,10 +5,11 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { db } from '@/lib/firebase/config';
 import { collection, query, where, getDocs, doc, getDoc } from 'firebase/firestore';
-import { format, addDays, startOfWeek } from 'date-fns';
+import { format, addDays, startOfWeek, isWithinInterval, startOfDay, endOfDay } from 'date-fns';
 import { fr } from 'date-fns/locale';
 import type { Service, BreakPeriod } from '@/types/booking';
 import MobileCalendarView from './mobile/MobileCalendarView';
+import { useVacationPeriods } from '@/lib/hooks/useVacationPeriods';
 
 interface Staff {
   id: string;
@@ -71,6 +72,11 @@ const hasAvailableSlotsInWeek = (slots: { [key: string]: TimeSlot[] }): boolean 
   });
 };
 
+const isPastWeek = (date: Date): boolean => {
+  const today = startOfWeek(new Date(), { weekStartsOn: 1 });
+  return date < today;
+};
+
 export default function DateStaffSelection({ 
   businessId, 
   serviceId,
@@ -81,6 +87,10 @@ export default function DateStaffSelection({
   const isInitialized = useRef(false);
   const [staff, setStaff] = useState<Staff[]>([]);
   const [selectedStaff, setSelectedStaff] = useState<Staff | null>(null);
+  const { businessVacations, staffVacations } = useVacationPeriods({
+    businessId,
+    staffId: selectedStaff?.id
+  });
   const [weekStart, setWeekStart] = useState(() => {
     const today = new Date();
     return startOfWeek(today, { weekStartsOn: 1 });
@@ -104,6 +114,29 @@ export default function DateStaffSelection({
       parts.push(`${duration.minutes}min`);
     }
     return parts.join(' ');
+  };
+
+  const isStaffInVacation = (date: Date, staffId: string): boolean => {
+    const checkDate = startOfDay(date);
+  
+    // Vérifier les vacances business
+    const isInBusinessVacation = businessVacations.some(vacation => 
+      isWithinInterval(checkDate, {
+        start: startOfDay(vacation.startDate),
+        end: endOfDay(vacation.endDate)
+      })
+    );
+  
+    if (isInBusinessVacation) return true;
+  
+    // Vérifier les vacances du staff
+    const staffVacationsList = staffVacations.filter(v => v.entityId === staffId);
+    return staffVacationsList.some(vacation => 
+      isWithinInterval(checkDate, {
+        start: startOfDay(vacation.startDate),
+        end: endOfDay(vacation.endDate)
+      })
+    );
   };
 
   // Effet pour le chargement initial des données
@@ -176,11 +209,18 @@ export default function DateStaffSelection({
     staffToCheck: Staff[],
     date: Date
   ): Staff[] => {
+
     const dateStr = format(date, 'yyyy-MM-dd');
     const timeString = format(currentTime, 'HH:mm');
     const endTimeString = format(slotEndTime, 'HH:mm');
     
     return staffToCheck.filter(staffMember => {
+      // Vérifier les vacances pour ce staff spécifique
+      if (isStaffInVacation(date, staffMember.id)) {
+        return false;
+      }
+  
+
       const days = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
       const dayName = days[date.getDay()];
   
@@ -291,35 +331,50 @@ export default function DateStaffSelection({
     setError(null);
     
     try {
-      let currentWeekStart = startDate;
-      let slotsFound = false;
-      let weeksChecked = 0;
+      setWeekStart(startDate);
+      let consecutiveUnavailableWeeks = 0;
+      let hasCheckedCurrentWeek = false;
+      let currentCheck = startDate;
   
-      do {
-        const slots: { [key: string]: TimeSlot[] } = {};
+      // Vérifier jusqu'à 8 semaines à partir de la date de début
+      for (let weekOffset = 0; weekOffset < 8; weekOffset++) {
+        const weekSlots: { [key: string]: TimeSlot[] } = {};
         
-        // On utilise currentWeekStart pour la recherche
-        for (const day of [...Array(7)].map((_, index) => addDays(currentWeekStart, index))) {
+        // Vérifier les jours de la semaine courante
+        for (const day of [...Array(7)].map((_, index) => addDays(currentCheck, index))) {
           const dayStr = format(day, 'yyyy-MM-dd');
-          slots[dayStr] = await fetchDaySlots(day);
+          weekSlots[dayStr] = await fetchDaySlots(day);
         }
   
-        if (hasAvailableSlotsInWeek(slots)) {
-          setAvailableSlots(slots);
-          setWeekStart(currentWeekStart);
-          slotsFound = true;
+        if (!hasCheckedCurrentWeek) {
+          // Pour la première semaine (semaine courante), on met à jour l'affichage
+          setAvailableSlots(weekSlots);
+          hasCheckedCurrentWeek = true;
+        }
+  
+        if (!hasAvailableSlotsInWeek(weekSlots)) {
+          consecutiveUnavailableWeeks++;
+        } else {
+          // Si on trouve une semaine avec des disponibilités, on arrête de chercher
           break;
         }
   
-        // Seulement avancer à la semaine suivante si on n'a pas trouvé de créneaux
-        currentWeekStart = addDays(currentWeekStart, 7);
-        weeksChecked++;
-      } while (!slotsFound && weeksChecked < 8);
-  
-      if (!slotsFound) {
-        setAvailableSlots({});
-        setError('Aucune disponibilité trouvée dans les 8 prochaines semaines');
+        currentCheck = addDays(currentCheck, 7);
       }
+  
+      // Définir le message d'erreur approprié
+      if (consecutiveUnavailableWeeks > 0) {
+        if (consecutiveUnavailableWeeks === 1) {
+          setError('Aucun créneau disponible cette semaine');
+        } else if (consecutiveUnavailableWeeks === 8) {
+          setError('Aucun créneau disponible dans les 8 prochaines semaines. Veuillez nous contacter directement pour plus d informations.');
+        } else {
+          setError(`Aucun créneau disponible les ${consecutiveUnavailableWeeks} prochaines semaines`);
+        }
+      } else {
+        setError(null);
+      }
+  
     } catch (error) {
       console.error('Erreur lors du chargement des disponibilités:', error);
       setError('Erreur lors du chargement des disponibilités');
@@ -340,24 +395,29 @@ export default function DateStaffSelection({
     staff,
     serviceDuration,
     appointments,
-    staffHoursMap
+    staffHoursMap,
+    businessVacations, // Remplacez isDateInVacation par ceux-ci
+    staffVacations
   ]);
 
   const handleTimeSelect = (date: Date, slot: TimeSlot) => {
     if (!slot.availableStaff.length) return;
-
+  
     const [hours, minutes] = slot.time.split(':').map(Number);
     const selectedDate = new Date(date);
     selectedDate.setHours(hours, minutes, 0, 0);
-
+  
     if (selectedStaff) {
+      // Si un staff est déjà sélectionné 
       onSelect(selectedDate, selectedStaff.id);
     } else {
-      const randomStaff = slot.availableStaff[Math.floor(Math.random() * slot.availableStaff.length)];
+      // Les staffs dans slot.availableStaff sont déjà filtrés et disponibles
+      const randomStaff = slot.availableStaff[
+        Math.floor(Math.random() * slot.availableStaff.length)
+      ];
       onSelect(selectedDate, randomStaff.id);
     }
   };
-
 
   return (
     <div className="date-selector">
@@ -409,12 +469,21 @@ export default function DateStaffSelection({
 
       {/* Navigation commune */}
       <div className="calendar-navigation mb-4">
-        <button
-          onClick={() => setWeekStart(addDays(weekStart, -7))}
-          className="nav-button text-[hsl(var(--foreground))]"
-        >
-          <ChevronLeft className="w-4 h-4" />
-        </button>
+      <button
+  onClick={() => {
+    const newWeekStart = addDays(weekStart, -7);
+    if (!isPastWeek(newWeekStart)) {
+      setWeekStart(newWeekStart);
+    }
+  }}
+  // Désactiver le bouton si la semaine précédente est dans le passé
+  disabled={isPastWeek(addDays(weekStart, -7))}
+  className={`nav-button text-[hsl(var(--foreground))] ${
+    isPastWeek(addDays(weekStart, -7)) ? 'opacity-50 cursor-not-allowed' : ''
+  }`}
+>
+  <ChevronLeft className="w-4 h-4" />
+</button>
         <div className="text-sm font-medium text-[hsl(var(--foreground))]">
           {format(weekStart, 'd MMM', { locale: fr })} - {format(addDays(weekStart, 6), 'd MMM', { locale: fr })}
         </div>
@@ -503,12 +572,11 @@ export default function DateStaffSelection({
         </div>
       )}
 
-      {!loading && Object.values(availableSlots).every(slots => slots.length === 0) && (
-       <div className="empty-state">
-       Aucun créneau disponible dans les 8 prochaines semaines.
-       Veuillez nous contacter directement pour plus d'informations.
-     </div>
-      )}
+{!loading && Object.values(availableSlots).every(slots => slots.length === 0) && (
+  <div className="empty-state">
+    {error}
+  </div>
+)}
     </div>
   );
 }
