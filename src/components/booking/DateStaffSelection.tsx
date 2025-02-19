@@ -5,11 +5,11 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { db } from '@/lib/firebase/config';
 import { collection, query, where, getDocs, doc, getDoc } from 'firebase/firestore';
-import { format, addDays, startOfWeek, isWithinInterval, startOfDay, endOfDay } from 'date-fns';
+import { format, addDays, startOfWeek } from 'date-fns';
 import { fr } from 'date-fns/locale';
 import type { Service, BreakPeriod } from '@/types/booking';
 import MobileCalendarView from './mobile/MobileCalendarView';
-import { useVacationPeriods } from '@/lib/hooks/useVacationPeriods';
+import { useAllVacationPeriods } from '@/lib/hooks/useAllVacationPeriods';
 
 interface Staff {
   id: string;
@@ -87,10 +87,7 @@ export default function DateStaffSelection({
   const isInitialized = useRef(false);
   const [staff, setStaff] = useState<Staff[]>([]);
   const [selectedStaff, setSelectedStaff] = useState<Staff | null>(null);
-  const { businessVacations, staffVacations } = useVacationPeriods({
-    businessId,
-    staffId: selectedStaff?.id
-  });
+  const { isStaffInVacation } = useAllVacationPeriods(businessId, staff);
   const [weekStart, setWeekStart] = useState(() => {
     const today = new Date();
     return startOfWeek(today, { weekStartsOn: 1 });
@@ -116,28 +113,6 @@ export default function DateStaffSelection({
     return parts.join(' ');
   };
 
-  const isStaffInVacation = (date: Date, staffId: string): boolean => {
-    const checkDate = startOfDay(date);
-  
-    // Vérifier les vacances business
-    const isInBusinessVacation = businessVacations.some(vacation => 
-      isWithinInterval(checkDate, {
-        start: startOfDay(vacation.startDate),
-        end: endOfDay(vacation.endDate)
-      })
-    );
-  
-    if (isInBusinessVacation) return true;
-  
-    // Vérifier les vacances du staff
-    const staffVacationsList = staffVacations.filter(v => v.entityId === staffId);
-    return staffVacationsList.some(vacation => 
-      isWithinInterval(checkDate, {
-        start: startOfDay(vacation.startDate),
-        end: endOfDay(vacation.endDate)
-      })
-    );
-  };
 
   // Effet pour le chargement initial des données
   useEffect(() => {
@@ -396,8 +371,7 @@ export default function DateStaffSelection({
     serviceDuration,
     appointments,
     staffHoursMap,
-    businessVacations, // Remplacez isDateInVacation par ceux-ci
-    staffVacations
+    isStaffInVacation,
   ]);
 
   const handleTimeSelect = (date: Date, slot: TimeSlot) => {
