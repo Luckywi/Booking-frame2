@@ -32,19 +32,19 @@ interface ThemeConfig {
         accentForeground: '0 0% 100%' // Blanc
     },
     'FQPbT92r7KfV5AYwzTHQonVoYRf2': {
-      background: '0 0% 0% 0',          // Complètement transparent
+      background: '0 0% 0% 0',          // Transparent
       foreground: '0 0% 100%',          // Blanc
-      primary: '90 16% 55%',            // Vert olive #8A9A80
+      primary: '0 0% 0% 0',             // Transparent
       primaryForeground: '0 0% 100%',   // Blanc
-      card: '0 0% 0% 0.1',              // Légèrement opaque pour les cartes
+      card: '0 0% 0% 0',                // Transparent
       cardForeground: '0 0% 100%',      // Blanc
-      secondary: '0 0% 0% 0.6',         // Noir semi-transparent pour masquer le contenu en dessous
+      secondary: '0 0% 0% 0',           // Transparent
       secondaryForeground: '0 0% 100%', // Blanc
-      border: '0 0% 100% 0.3',          // Bordures blanches légèrement transparentes
-      muted: '0 0% 0% 0.8',             // Noir presque opaque pour les fonds des menus déroulants
+      border: '0 0% 100% 0.3',          // Bordure blanche semi-transparente
+      muted: '0 0% 0% 0',               // Transparent
       mutedForeground: '0 0% 100%',     // Blanc
-      accent: '90 16% 55%',             // Vert olive #8A9A80
-      accentForeground: '0 0% 100%',    // Blanc
+      accent: '0 0% 0% 0',              // Transparent
+      accentForeground: '0 0% 100%'     // Blanc
   },
     // Autre exemple - Thème bleu professionnel
     'eWnA3TqDBKVsd2RpViEkJPNTE753': {
