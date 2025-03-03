@@ -31,7 +31,22 @@ interface ThemeConfig {
         accent: '0 0% 0%',          // Noir
         accentForeground: '0 0% 100%' // Blanc
     },
-  
+    'FQPbT92r7KfV5AYwzTHQonVoYRf2': {
+      background: '0 0% 0% 0.2',       // Noir avec 20% d'opacité
+      foreground: '0 0% 100%',         // Blanc (inchangé)
+      primary: '0 0% 0% 0.2',          // Noir avec 20% d'opacité
+      primaryForeground: '0 0% 100%',  // Blanc (inchangé)
+      card: '0 0% 0% 0.2',             // Noir avec 20% d'opacité
+      cardForeground: '0 0% 100%',     // Blanc (inchangé)
+      secondary: '0 0% 0% 0.2',        // Noir avec 20% d'opacité
+      secondaryForeground: '0 0% 100%', // Blanc (inchangé)
+      border: '0 0% 100%',             // Blanc (inchangé)
+      muted: '0 0% 0% 0.2',            // Noir avec 20% d'opacité
+      mutedForeground: '0 0% 80%',     // Gris clair (inchangé)
+      accent: '0 0% 0% 0.2',           // Noir avec 20% d'opacité
+      accentForeground: '0 0% 100%'    // Blanc (inchangé)
+    },
+
     // Autre exemple - Thème bleu professionnel
     'eWnA3TqDBKVsd2RpViEkJPNTE753': {
       background: '210 40% 98%',     // Blanc légèrement bleuté
@@ -74,10 +89,7 @@ interface ThemeConfig {
   export function applyTheme(businessId: string): void {
     const theme = getTheme(businessId);
     const root = document.documentElement;
-    
-    // Ajouter l'attribut data-theme-id au body
-    document.body.setAttribute('data-theme-id', businessId);
-    
+  
     Object.entries(theme).forEach(([key, value]) => {
       root.style.setProperty(`--${key}`, value);
     });
