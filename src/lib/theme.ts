@@ -32,21 +32,21 @@ interface ThemeConfig {
         accentForeground: '0 0% 100%' // Blanc
     },
     'FQPbT92r7KfV5AYwzTHQonVoYRf2': {
-      background: '70 30% 15% 0.9',    // Fond vert olive foncé semi-transparent (90% d'opacité)
+      background: '0 0% 0% 0.2',       // Noir avec 20% d'opacité
       foreground: '0 0% 100%',         // Blanc
-      primary: '70 30% 15% 0.9',       // Même que background
+      primary: '0 0% 0% 0.2',          // Noir avec 20% d'opacité
       primaryForeground: '0 0% 100%',  // Blanc
-      card: '70 30% 15% 0.8',          // Légèrement plus transparent que le background
+      card: '0 0% 0% 0.2',             // Noir avec 20% d'opacité
       cardForeground: '0 0% 100%',     // Blanc
-      secondary: '70 30% 15% 0.9',     // Même que background
+      secondary: '0 0% 0% 0.2',        // Noir avec 20% d'opacité
       secondaryForeground: '0 0% 100%', // Blanc
-      border: '0 0% 100% 0.1',         // Bordure blanche très légère
-      muted: '70 30% 15% 0.7',         // Version plus transparente du fond
-      mutedForeground: '0 0% 100% 0.7', // Blanc avec opacité réduite
-      accent: '70 30% 15% 0.8',        // Même que card
+      border: '0 0% 100%',             // Blanc
+      muted: '0 0% 0% 0.2',            // Noir avec 20% d'opacité
+      mutedForeground: '0 0% 80%',     // Gris clair (inchangé)
+      accent: '0 0% 0% 0.2',           // Noir avec 20% d'opacité
       accentForeground: '0 0% 100%'    // Blanc
-    },
-    
+  },
+
     // Autre exemple - Thème bleu professionnel
     'eWnA3TqDBKVsd2RpViEkJPNTE753': {
       background: '210 40% 98%',     // Blanc légèrement bleuté
