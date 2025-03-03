@@ -32,19 +32,21 @@ interface ThemeConfig {
         accentForeground: '0 0% 100%' // Blanc
     },
     'FQPbT92r7KfV5AYwzTHQonVoYRf2': {
-      background: '0 0% 0% 0',          // Noir → Transparent
-      foreground: '0 0% 100%',          // Blanc → Reste blanc
-      primary: '0 0% 0% 0',             // Noir → Transparent
-      primaryForeground: '0 0% 100%',   // Blanc → Reste blanc
-      card: '0 0% 0% 0',                // Noir → Transparent
-      cardForeground: '0 0% 100%',      // Blanc → Reste blanc
-      secondary: '0 0% 0% 0',           // Noir → Transparent
-      secondaryForeground: '0 0% 100%', // Blanc → Reste blanc
-      border: '0 0% 100%',              // Blanc → Reste blanc
-      muted: '0 0% 0% 0',               // Noir → Transparent
-      mutedForeground: '0 0% 100%',     // Gris clair → Changé en blanc
-      accent: '0 0% 0% 0',              // Noir → Transparent
-      accentForeground: '0 0% 100%'     // Blanc → Reste blanc
+      background: '0 0% 0% 0',          // Complètement transparent
+      foreground: '0 0% 100%',          // Blanc
+      primary: '90 16% 55%',            // Vert olive #8A9A80
+      primaryForeground: '0 0% 100%',   // Blanc
+      card: '0 0% 0% 0.1',              // Légèrement opaque pour les cartes
+      cardForeground: '0 0% 100%',      // Blanc
+      secondary: '0 0% 0% 0.6',         // Noir semi-transparent pour masquer le contenu en dessous
+      secondaryForeground: '0 0% 100%', // Blanc
+      border: '0 0% 100% 0.3',          // Bordures blanches légèrement transparentes
+      muted: '0 0% 0% 0.8',             // Noir presque opaque pour les fonds des menus déroulants
+      mutedForeground: '0 0% 100%',     // Blanc
+      accent: '90 16% 55%',             // Vert olive #8A9A80
+      accentForeground: '0 0% 100%',    // Blanc
+      popover: '0 0% 0% 0.9',           // Noir très opaque pour les menus
+      popoverForeground: '0 0% 100%'    // Blanc
   },
     // Autre exemple - Thème bleu professionnel
     'eWnA3TqDBKVsd2RpViEkJPNTE753': {
