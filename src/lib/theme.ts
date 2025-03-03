@@ -31,6 +31,21 @@ interface ThemeConfig {
         accent: '0 0% 0%',          // Noir
         accentForeground: '0 0% 100%' // Blanc
     },
+    'FQPbT92r7KfV5AYwzTHQonVoYRf2': {
+      background: '0 0% 0%',           // Noir
+      foreground: '0 0% 100%',         // Blanc
+      primary: '90 16% 55%',           // Vert olive #8A9A80
+      primaryForeground: '0 0% 100%',  // Blanc
+      card: '0 0% 5%',                 // Noir très légèrement grisé
+      cardForeground: '0 0% 100%',     // Blanc
+      secondary: '90 16% 15%',         // Vert olive très foncé
+      secondaryForeground: '0 0% 100%', // Blanc
+      border: '90 16% 55%',            // Vert olive #8A9A80
+      muted: '0 0% 10%',               // Gris très foncé
+      mutedForeground: '0 0% 80%',     // Gris clair
+      accent: '90 16% 55%',            // Vert olive #8A9A80
+      accentForeground: '0 0% 100%'    // Blanc
+  },
     // Autre exemple - Thème bleu professionnel
     'eWnA3TqDBKVsd2RpViEkJPNTE753': {
       background: '210 40% 98%',     // Blanc légèrement bleuté
