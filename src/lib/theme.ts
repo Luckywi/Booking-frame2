@@ -32,18 +32,18 @@ interface ThemeConfig {
         accentForeground: '0 0% 100%' // Blanc
     },
     'FQPbT92r7KfV5AYwzTHQonVoYRf2': {
-      background: '0 0% 0% 0.2',       // Noir avec 20% d'opacité
+      background: 'linear-gradient(to bottom, hsl(0, 0%, 0%), hsl(90, 10%, 55%)',// Noir avec 20% d'opacité
       foreground: '0 0% 100%',         // Blanc (inchangé)
-      primary: '0 0% 0% 0.2',          // Noir avec 20% d'opacité
+      primary: 'linear-gradient(to bottom, hsl(0, 0%, 0%), hsl(90, 10%, 55%)',        // Noir avec 20% d'opacité
       primaryForeground: '0 0% 100%',  // Blanc (inchangé)
-      card: '0 0% 0% 0.2',             // Noir avec 20% d'opacité
+      card: 'linear-gradient(to bottom, hsl(0, 0%, 0%), hsl(90, 10%, 55%)',            // Noir avec 20% d'opacité
       cardForeground: '0 0% 100%',     // Blanc (inchangé)
-      secondary: '0 0% 0% 0.2',        // Noir avec 20% d'opacité
+      secondary: 'linear-gradient(to bottom, hsl(0, 0%, 0%), hsl(90, 10%, 55%)',      // Noir avec 20% d'opacité
       secondaryForeground: '0 0% 100%', // Blanc (inchangé)
       border: '0 0% 100%',             // Blanc (inchangé)
-      muted: '0 0% 0% 0.2',            // Noir avec 20% d'opacité
+      muted: 'linear-gradient(to bottom, hsl(0, 0%, 0%), hsl(90, 10%, 55%)',            // Noir avec 20% d'opacité
       mutedForeground: '0 0% 80%',     // Gris clair (inchangé)
-      accent: '0 0% 0% 0.2',           // Noir avec 20% d'opacité
+      accent: 'linear-gradient(to bottom, hsl(0, 0%, 0%), hsl(90, 10%, 55%)',           // Noir avec 20% d'opacité
       accentForeground: '0 0% 100%'    // Blanc (inchangé)
     },
 
