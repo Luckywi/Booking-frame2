@@ -77,16 +77,19 @@ const SelectContent = React.forwardRef<
     <SelectPrimitive.Content
       ref={ref}
       className={cn(
-        "relative z-50 max-h-96 min-w-[8rem] overflow-hidden rounded-md border bg-transparent text-popover-foreground shadow-md backdrop-blur-lg backdrop-saturate-150 backdrop-brightness-50",
-        // Le background est transparent, mais on ajoute des effets de filtre pour masquer le contenu en dessous
+        "relative z-50 max-h-96 min-w-[8rem] overflow-hidden rounded-md border shadow-md backdrop-blur-md",
+        // Utilisation des variables existantes
+        "bg-[hsl(var(--primary))] text-[hsl(var(--primary-foreground))]",
         position === "popper" &&
           "data-[side=bottom]:translate-y-1 data-[side=left]:-translate-x-1 data-[side=right]:translate-x-1 data-[side=top]:-translate-y-1",
         className
       )}
+      style={{
+        backgroundColor: 'rgba(0, 0, 0, 0.85)'
+      }}
       position={position}
       {...props}
     >
-      <div className="absolute inset-0 bg-black opacity-60 -z-10"></div>
       <SelectScrollUpButton />
       <SelectPrimitive.Viewport
         className={cn(
@@ -101,6 +104,7 @@ const SelectContent = React.forwardRef<
     </SelectPrimitive.Content>
   </SelectPrimitive.Portal>
 ))
+
 SelectContent.displayName = SelectPrimitive.Content.displayName
 
 const SelectLabel = React.forwardRef<
@@ -122,7 +126,9 @@ const SelectItem = React.forwardRef<
   <SelectPrimitive.Item
     ref={ref}
     className={cn(
-      "relative flex w-full cursor-default select-none items-center rounded-sm py-1.5 pl-2 pr-8 text-sm outline-none focus:bg-accent focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50",
+      "relative flex w-full cursor-default select-none items-center rounded-sm py-1.5 pl-2 pr-8 text-sm outline-none",
+      "focus:bg-[hsl(var(--accent))] focus:text-[hsl(var(--accent-foreground))]",
+      "data-[disabled]:pointer-events-none data-[disabled]:opacity-50",
       className
     )}
     {...props}

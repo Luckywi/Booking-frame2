@@ -45,8 +45,6 @@ interface ThemeConfig {
       mutedForeground: '0 0% 100%',     // Blanc
       accent: '90 16% 55%',             // Vert olive #8A9A80
       accentForeground: '0 0% 100%',    // Blanc
-      popover: '0 0% 0% 0.9',           // Noir très opaque pour les menus
-      popoverForeground: '0 0% 100%'    // Blanc
   },
     // Autre exemple - Thème bleu professionnel
     'eWnA3TqDBKVsd2RpViEkJPNTE753': {
