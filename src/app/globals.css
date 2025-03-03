@@ -438,8 +438,31 @@
     @apply p-3;
   }
 }
-  
 
+/* Styles spécifiques pour le thème avec ID FQPbT92r7KfV5AYwzTHQonVoYRf2 */
+[data-theme-id="FQPbT92r7KfV5AYwzTHQonVoYRf2"] .booking-container,
+[data-theme-id="FQPbT92r7KfV5AYwzTHQonVoYRf2"] .card,
+[data-theme-id="FQPbT92r7KfV5AYwzTHQonVoYRf2"] .service-card,
+[data-theme-id="FQPbT92r7KfV5AYwzTHQonVoYRf2"] .service-card-selected,
+[data-theme-id="FQPbT92r7KfV5AYwzTHQonVoYRf2"] .staff-selector,
+[data-theme-id="FQPbT92r7KfV5AYwzTHQonVoYRf2"] .booking-summary,
+[data-theme-id="FQPbT92r7KfV5AYwzTHQonVoYRf2"] .calendar-navigation,
+[data-theme-id="FQPbT92r7KfV5AYwzTHQonVoYRf2"] .mobile-day-header,
+[data-theme-id="FQPbT92r7KfV5AYwzTHQonVoYRf2"] .mobile-time-slot {
+  backdrop-filter: blur(4px) !important;
+  -webkit-backdrop-filter: blur(4px) !important;
+  background-color: rgba(0, 0, 0, 0.2) !important;
+}
+
+/* Pour les composants qui utilisent des variables Tailwind */
+[data-theme-id="FQPbT92r7KfV5AYwzTHQonVoYRf2"] .bg-\[hsl\(var\(--accent\)\)\],
+[data-theme-id="FQPbT92r7KfV5AYwzTHQonVoYRf2"] .bg-\[hsl\(var\(--card\)\)\],
+[data-theme-id="FQPbT92r7KfV5AYwzTHQonVoYRf2"] .bg-\[hsl\(var\(--background\)\)\],
+[data-theme-id="FQPbT92r7KfV5AYwzTHQonVoYRf2"] .bg-\[hsl\(var\(--muted\)\)\] {
+  backdrop-filter: blur(4px) !important;
+  -webkit-backdrop-filter: blur(4px) !important;
+  background-color: rgba(0, 0, 0, 0.2) !important;
+}
 
 
 }
