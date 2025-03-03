@@ -77,15 +77,13 @@ const SelectContent = React.forwardRef<
     <SelectPrimitive.Content
       ref={ref}
       className={cn(
-        "relative z-50 max-h-96 min-w-[8rem] overflow-hidden rounded-md border shadow-md backdrop-blur-md",
-        // Utilisation des variables existantes
-        "bg-[hsl(var(--primary))] text-[hsl(var(--primary-foreground))]",
+        "relative z-50 max-h-96 min-w-[8rem] overflow-hidden rounded-md border bg-black text-white shadow-md",
         position === "popper" &&
           "data-[side=bottom]:translate-y-1 data-[side=left]:-translate-x-1 data-[side=right]:translate-x-1 data-[side=top]:-translate-y-1",
         className
       )}
       style={{
-        backgroundColor: 'rgba(0, 0, 0, 0.85)'
+        backgroundColor: 'rgba(0, 0, 0, 0.95)' // Fond noir presque opaque
       }}
       position={position}
       {...props}
