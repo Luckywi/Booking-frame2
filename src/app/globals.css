@@ -168,8 +168,9 @@
  }
 
  .time-slot-available {
-   @apply hover:bg-[hsl(var(--primary))] hover:text-[hsl(var(--primary-foreground))] bg-[hsl(var(--background))] border;
- }
+  @apply bg-transparent border border-white text-white transition-all duration-200 
+  shadow-none transform translate-y-0 hover:translate-y-[-2px] hover:shadow-lg hover:border-opacity-100;
+}
 
  .time-slot-unavailable {
    @apply text-[hsl(var(--muted-foreground))] bg-[hsl(var(--muted))] cursor-not-allowed;
