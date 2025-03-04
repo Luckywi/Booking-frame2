@@ -53,7 +53,7 @@ const TimeSlotGroup = ({ slots, selectedStaff, handleTimeSelect, date, showAll =
             className={`
               mobile-time-slot
               ${isAvailable 
-                ? 'hover:bg-black hover:text-white bg-transparent text-[hsl(var(--foreground))] border-[hsl(var(--foreground))]'
+                ? 'hover:shadow-lg hover:translate-y-[-2px] transition-all duration-200 bg-transparent text-[hsl(var(--foreground))] border-[hsl(var(--foreground))]'
                 : 'text-muted-foreground bg-muted cursor-not-allowed'
               }
             `}
