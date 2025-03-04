@@ -67,7 +67,7 @@ const SelectScrollDownButton = React.forwardRef<
 SelectScrollDownButton.displayName =
   SelectPrimitive.ScrollDownButton.displayName
 
-const SelectContent = React.forwardRef<
+  const SelectContent = React.forwardRef<
   React.ElementRef<typeof SelectPrimitive.Content>,
   React.ComponentPropsWithoutRef<typeof SelectPrimitive.Content>
 >(({ className, children, position = "popper", ...props }, ref) => (
@@ -81,10 +81,9 @@ const SelectContent = React.forwardRef<
         className
       )}
       style={{
-        backgroundColor: 'rgba(0, 0, 0, 0.5)', // Fond noir semi-transparent
-        backdropFilter: 'blur(8px)', // Effet de flou significatif pour améliorer la lisibilité
-        boxShadow: '0 8px 32px rgba(0, 0, 0, 0.2)', // Ombre subtile
-        borderColor: 'rgba(255, 255, 255, 0.1)' // Bordure légère
+        backgroundColor: 'rgba(0, 0, 0, 0.9)', // Fond plus opaque
+        boxShadow: '0 8px 32px rgba(0, 0, 0, 0.3)', // Ombre plus prononcée
+        borderColor: 'rgba(255, 255, 255, 0.15)' // Bordure plus visible
       }}
       position={position}
       {...props}

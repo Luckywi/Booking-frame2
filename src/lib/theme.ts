@@ -32,20 +32,20 @@ interface ThemeConfig {
         accentForeground: '0 0% 100%' // Blanc
     },
     'FQPbT92r7KfV5AYwzTHQonVoYRf2': {
-      background: 'linear-gradient(to bottom, hsl(0, 0%, 0%), hsl(90, 10%, 55%)',// Noir avec 20% d'opacité
-      foreground: '0 0% 100%',         // Blanc (inchangé)
-      primary: 'linear-gradient(to bottom, hsl(0, 0%, 0%), hsl(90, 10%, 55%)',        // Noir avec 20% d'opacité
-      primaryForeground: '0 0% 100%',  // Blanc (inchangé)
-      card: 'linear-gradient(to bottom, hsl(0, 0%, 0%), hsl(90, 10%, 55%)',            // Noir avec 20% d'opacité
-      cardForeground: '0 0% 100%',     // Blanc (inchangé)
-      secondary: 'linear-gradient(to bottom, hsl(0, 0%, 0%), hsl(90, 10%, 55%)',      // Noir avec 20% d'opacité
-      secondaryForeground: '0 0% 100%', // Blanc (inchangé)
-      border: '0 0% 100%',             // Blanc (inchangé)
-      muted: 'linear-gradient(to bottom, hsl(0, 0%, 0%), hsl(90, 10%, 55%)',            // Noir avec 20% d'opacité
-      mutedForeground: '0 0% 80%',     // Gris clair (inchangé)
-      accent: 'linear-gradient(to bottom, hsl(0, 0%, 0%), hsl(90, 10%, 55%)',           // Noir avec 20% d'opacité
-      accentForeground: '0 0% 100%'    // Blanc (inchangé)
-    },
+      background: '0 0% 0% 0',       // Noir transparent
+    foreground: '0 0% 100%',     // Blanc
+    primary: '0 0% 0% 0',          // Noir transparent
+    primaryForeground: '0 0% 100%', // Blanc
+    card: '0 0% 0% 0',            // Noir transparent
+    cardForeground: '0 0% 100%', // Blanc
+    secondary: '0 0% 0% 0',        // Noir transparent
+    secondaryForeground: '0 0% 100%', // Blanc
+    border: '0 0% 100%',         // Blanc
+    muted: '0 0% 0% 0',           // Noir transparent
+    mutedForeground: '0 0% 80%', // Gris clair
+    accent: '0 0% 0% 0',          // Noir transparent
+    accentForeground: '0 0% 100%' // Blanc
+},
 
     // Autre exemple - Thème bleu professionnel
     'eWnA3TqDBKVsd2RpViEkJPNTE753': {
