@@ -440,4 +440,43 @@
   }
 }
 
+/* Ajoutez ces styles à votre fichier src/app/globals.css dans la section @layer components */
+
+@layer components {
+  /* Styles pour l'en-tête de catégorie sur mobile */
+  .service-category-header {
+    @apply py-3 border-b border-[hsl(var(--border))] transition-colors duration-200;
+  }
+
+  .service-category-header:hover {
+    @apply bg-[hsl(var(--accent))]/10;
+  }
+
+  .service-category-title {
+    @apply text-base font-medium text-[hsl(var(--foreground))];
+  }
+
+  /* Animation pour l'ouverture/fermeture des catégories */
+  .service-category-content {
+    @apply transition-all duration-300 overflow-hidden;
+  }
+
+  .service-category-content.collapsed {
+    @apply max-h-0 opacity-0 py-0;
+  }
+
+  .service-category-content.expanded {
+    @apply max-h-[2000px] opacity-100 py-3;
+  }
+
+  /* Styles de la flèche d'expansion */
+  .service-category-chevron {
+    @apply text-[hsl(var(--muted-foreground))] transition-transform duration-200;
+  }
+
+  .service-category-header:hover .service-category-chevron {
+    @apply text-[hsl(var(--foreground))];
+  }
+}
+
 }

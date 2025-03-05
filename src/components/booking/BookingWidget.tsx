@@ -1,3 +1,4 @@
+// Modifications à apporter au fichier src/components/booking/BookingWidget.tsx
 
 'use client';
 
@@ -9,7 +10,7 @@ import type { Service, Staff } from '@/types/booking';
 import DateStaffSelection from './DateStaffSelection';
 import ClientForm from './ClientForm';
 import { useRouter } from 'next/navigation';
-import { ChevronLeft } from 'lucide-react';
+import { ChevronLeft, ChevronDown, ChevronUp } from 'lucide-react';
 import { useIframeResize } from '@/lib/hooks/useIframeResize';
 
 interface BookingWidgetProps {
@@ -36,6 +37,33 @@ export default function BookingWidget({ businessId }: BookingWidgetProps) {
   const [staffList, setStaffList] = useState<Staff[]>([]);
   const router = useRouter();
   const [serviceCategories, setServiceCategories] = useState<ServiceCategory[]>([]);
+  // État pour suivre les catégories développées sur mobile
+  const [expandedCategories, setExpandedCategories] = useState<{[key: string]: boolean}>({});
+  // État pour détecter si on est sur mobile
+  const [isMobile, setIsMobile] = useState(false);
+
+  // Détecter l'affichage mobile
+  useEffect(() => {
+    const checkIsMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    
+    checkIsMobile();
+    window.addEventListener('resize', checkIsMobile);
+    
+    return () => {
+      window.removeEventListener('resize', checkIsMobile);
+    };
+  }, []);
+
+  // Fonction pour basculer l'état d'une catégorie (développée/réduite)
+  const toggleCategory = (categoryId: string) => {
+    setExpandedCategories(prev => ({
+      ...prev,
+      [categoryId]: !prev[categoryId]
+    }));
+    setTimeout(calculateHeight, 0);
+  };
 
   const handleStepChange = (newStep: number) => {
     setStep(newStep);
@@ -114,6 +142,12 @@ export default function BookingWidget({ businessId }: BookingWidgetProps) {
         setServices(servicesData);
         setServiceCategories(categoriesData);
         setStaffList(staffData);
+        // Initialiser toutes les catégories comme réduites par défaut
+        const initialExpandedState = categoriesData.reduce((acc, category) => {
+          acc[category.id] = false;
+          return acc;
+        }, {} as {[key: string]: boolean});
+        setExpandedCategories(initialExpandedState);
         setError(null);
       } catch (err) {
         console.error('Erreur lors du chargement des données:', err);
@@ -173,8 +207,26 @@ export default function BookingWidget({ businessId }: BookingWidgetProps) {
             <div className="space-y-8">
               {serviceCategories.map((category) => (
                 <div key={category.id} className="service-category">
-                  <h3 className="service-category-title">{category.title}</h3>
-                  <div className="space-y-3">
+                  {/* En-tête de catégorie cliquable sur mobile */}
+                  <div 
+                    className={`service-category-header ${isMobile ? 'cursor-pointer' : ''}`}
+                    onClick={() => isMobile && toggleCategory(category.id)}
+                  >
+                    <h3 className="service-category-title flex justify-between items-center">
+                      {category.title}
+                      {isMobile && (
+                        <span className="service-category-chevron">
+                          {expandedCategories[category.id] ? 
+                            <ChevronUp className="w-5 h-5" /> : 
+                            <ChevronDown className="w-5 h-5" />
+                          }
+                        </span>
+                      )}
+                    </h3>
+                  </div>
+
+                  {/* Contenu de la catégorie (toujours visible sur desktop, conditionnellement visible sur mobile) */}
+                  <div className={`space-y-3 ${isMobile && !expandedCategories[category.id] ? 'hidden' : 'block'}`}>
                     {services
                       .filter(service => service.categoryId === category.id)
                       .map((service) => (
