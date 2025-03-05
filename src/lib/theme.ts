@@ -89,8 +89,11 @@ interface ThemeConfig {
   export function applyTheme(businessId: string): void {
     const theme = getTheme(businessId);
     const root = document.documentElement;
-  
+    
     Object.entries(theme).forEach(([key, value]) => {
-      root.style.setProperty(`--${key}`, value);
+      // Convertir camelCase en kebab-case
+      const kebabKey = key.replace(/([a-z0-9]|(?=[A-Z]))([A-Z])/g, '$1-$2').toLowerCase();
+      root.style.setProperty(`--${kebabKey}`, value);
     });
   }
+  
