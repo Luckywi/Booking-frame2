@@ -57,11 +57,21 @@ export default function BookingWidget({ businessId }: BookingWidgetProps) {
   }, []);
 
   // Fonction pour basculer l'état d'une catégorie (développée/réduite)
+  // Cette version ferme automatiquement les autres catégories
   const toggleCategory = (categoryId: string) => {
-    setExpandedCategories(prev => ({
-      ...prev,
-      [categoryId]: !prev[categoryId]
-    }));
+    setExpandedCategories(prev => {
+      // Créer un nouvel objet avec toutes les catégories fermées
+      const allClosed = Object.keys(prev).reduce((acc, key) => {
+        acc[key] = false;
+        return acc;
+      }, {} as {[key: string]: boolean});
+      
+      // Bascule uniquement la catégorie cliquée
+      return {
+        ...allClosed,
+        [categoryId]: !prev[categoryId]
+      };
+    });
     setTimeout(calculateHeight, 0);
   };
 

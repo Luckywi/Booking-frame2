@@ -469,13 +469,9 @@
     @apply max-h-[2000px] opacity-100 py-3;
   }
 
-  /* Styles de la flèche d'expansion */
+  /* Styles de la flèche d'expansion - sans effet de survol */
   .service-category-chevron {
-    @apply text-[hsl(var(--muted-foreground))] transition-transform duration-200;
-  }
-
-  .service-category-header:hover .service-category-chevron {
-    @apply text-[hsl(var(--foreground))];
+    @apply text-[hsl(var(--foreground))] transition-transform duration-200;
   }
 }
 
