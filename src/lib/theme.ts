@@ -42,7 +42,7 @@ interface ThemeConfig {
     secondaryForeground: '0 0% 100%', // Blanc
     border: '0 0% 100%',         // Blanc
     muted: '0 0% 0% 0',           // Noir transparent
-    mutedForeground: '0 0% 80%', // Gris clair
+    mutedForeground: '0 0% 92%', // Gris clair
     accent: '0 0% 0% 0',          // Noir transparent
     accentForeground: '0 0% 100%' // Blanc
 },
